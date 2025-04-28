@@ -1,4 +1,5 @@
 import asyncio
+import os
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -9,8 +10,9 @@ import pandas as pd
 from starlette.responses import JSONResponse
 
 from database.db import Co_builderDAO
-from heandlers.heandlers import router
+from heandlers.heandlers import router, get_dm_channel, send_file
 
+USERS_ID = os.getenv("USERS_ID")
 
 async def repeat_task():
     # взятие значений с базы данных
@@ -19,7 +21,10 @@ async def repeat_task():
     df = pd.DataFrame.from_records([row.to_dict() for row in data])
     # добавление данных в таблицу member-list
     df.to_excel('member-list.xlsx', index=False)
-    # отправление файла
+    # получение пользователей
+    for user_id in USERS_ID:
+        channel_id = get_dm_channel(user_id)
+        send_file(channel_id)
     # очистка файла
     with open('member-list.xlsx', 'w') as file: pass
     # очистка базы данных
