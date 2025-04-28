@@ -1,7 +1,8 @@
 import os
 
 import dotenv
-from fastapi import APIRouter, Body, requests
+import requests
+from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse
 from starlette.background import BackgroundTask
 from database.db import Co_builderDAO
